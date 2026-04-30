@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoResearch Agent - 自动化深度研究</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <h1>AutoResearch Agent</h1>
+    <span class="subtitle">自动化深度研究智能体</span>
+    <nav class="header-nav">
+      <button id="btn-history" class="btn-ghost">历史</button>
+    </nav>
+  </header>
+
+  <section class="input-area">
+    <form id="research-form">
+      <div class="input-row">
+        <input type="text" id="topic-input" placeholder="输入研究主题，例如：Python 3.14 新特性对 AI 开发的影响" autocomplete="off">
+        <button type="submit" id="btn-start" class="btn-primary">开始研究</button>
+      </div>
+      <details class="advanced-settings">
+        <summary>高级设置</summary>
+        <div class="settings-row">
+          <label>最大迭代次数: <input type="number" id="max-iterations" value="3" min="1" max="10"></label>
+        </div>
+      </details>
+    </form>
+    <div id="status-bar" class="status-bar hidden">
+      <span class="status-indicator"></span>
+      <span class="status-phase"></span>
+      <span class="status-message"></span>
+      <span class="status-detail"></span>
+    </div>
+    <div id="progress-bar" class="progress-bar hidden">
+      <div class="progress-fill"></div>
+      <span class="progress-text"></span>
+    </div>
+  </section>
+
+  <main class="main-panels">
+    <aside id="log-panel" class="panel log-panel">
+      <h2>研究日志</h2>
+      <div id="timeline" class="timeline">
+        <div class="empty-state">输入研究主题并点击「开始研究」</div>
+      </div>
+    </aside>
+
+    <section id="result-panel" class="panel result-panel">
+      <nav class="tabs">
+        <button class="tab active" data-tab="plan">计划</button>
+        <button class="tab" data-tab="findings">发现</button>
+        <button class="tab" data-tab="report">报告</button>
+      </nav>
+      <div class="tab-content">
+        <div id="tab-plan" class="tab-pane active">
+          <div class="empty-state">等待研究计划生成...</div>
+        </div>
+        <div id="tab-findings" class="tab-pane">
+          <div class="empty-state">等待发现提取...</div>
+        </div>
+        <div id="tab-report" class="tab-pane">
+          <div class="empty-state">等待报告生成...</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 历史 Modal -->
+  <div id="history-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>历史报告</h2>
+        <button class="btn-close" id="btn-close-modal">&times;</button>
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
