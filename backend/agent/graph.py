@@ -1,11 +1,11 @@
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
-from agent.state import ResearchState
-from agent.nodes.planning import planning_node
-from agent.nodes.search import search_node
-from agent.nodes.extract import extract_node
-from agent.nodes.gap_analysis import gap_analysis_node
-from agent.nodes.report import report_node
+from backend.agent.state import ResearchState
+from backend.agent.nodes.planning import planning_node
+from backend.agent.nodes.search import search_node
+from backend.agent.nodes.extract import extract_node
+from backend.agent.nodes.gap_analysis import gap_analysis_node
+from backend.agent.nodes.report import report_node
 
 
 def route_after_gap(state: ResearchState) -> str:

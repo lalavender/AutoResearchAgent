@@ -1,7 +1,7 @@
 import json
 from typing import List, Dict, Any
 from langchain_openai import ChatOpenAI
-from agent.prompts.templates import TIER1_SEARCH_PROMPT
+from backend.agent.prompts.templates import TIER1_SEARCH_PROMPT
 
 
 async def tier1_search(question: str, llm: ChatOpenAI) -> List[Dict[str, Any]]:

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Query
 from fastapi.responses import StreamingResponse, FileResponse, PlainTextResponse
-from api.sse import event_generator
-from api.models import ResearchRequest, ReportListItem
-from storage.file_store import list_reports, load_report, REPORTS_DIR
+from backend.api.sse import event_generator
+from backend.api.models import ResearchRequest, ReportListItem
+from backend.storage.file_store import list_reports, load_report, REPORTS_DIR
 from pathlib import Path
 
 router = APIRouter()
@@ -39,7 +39,7 @@ async def get_report(filename: str):
 
 @router.get("/")
 async def index():
-    frontend = Path("frontend/index.html")
+    frontend = Path(__file__).parent.parent.parent / "frontend" / "index.html"
     if frontend.exists():
         return FileResponse(frontend)
     return PlainTextResponse("frontend/index.html 未找到", status_code=404)

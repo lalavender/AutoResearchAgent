@@ -1,9 +1,9 @@
 import json
 import uuid
 from typing import AsyncGenerator
-from agent.graph import build_research_graph
-from agent.state import ResearchState
-from agent.progress import register, unregister
+from backend.agent.graph import build_research_graph
+from backend.agent.state import ResearchState
+from backend.agent.progress import register, unregister
 
 
 async def event_generator(topic: str, max_iterations: int = 3) -> AsyncGenerator[str, None]:
@@ -53,6 +53,11 @@ async def event_generator(topic: str, max_iterations: int = 3) -> AsyncGenerator
                             yield _sse("message", msg)
                     if output.get("plan"):
                         yield _sse("plan", {"questions": output["plan"]})
+                    if output.get("search_results"):
+                        yield _sse("search_update", {
+                            "search_results": output["search_results"],
+                            "completed_questions": output.get("completed_questions", []),
+                        })
                     if output.get("findings"):
                         findings_count = sum(len(v) for v in output["findings"].values())
                         yield _sse("findings_update", {

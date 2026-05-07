@@ -1,7 +1,7 @@
 import json
-from agent.llm import get_flash_llm
-from agent.prompts.templates import GAP_ANALYSIS_PROMPT
-from agent.progress import push
+from backend.agent.llm import get_flash_llm
+from backend.agent.prompts.templates import GAP_ANALYSIS_PROMPT
+from backend.agent.progress import push
 
 
 async def gap_analysis_node(state: dict) -> dict:

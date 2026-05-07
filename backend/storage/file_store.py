@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from datetime import datetime
 
-DATA_DIR = Path("data")
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
 REPORTS_DIR = DATA_DIR / "reports"
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 

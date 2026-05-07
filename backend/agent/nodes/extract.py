@@ -1,10 +1,10 @@
 import asyncio
 import json
-from agent.llm import get_flash_llm
-from agent.prompts.templates import EXTRACT_PROMPT
-from agent.progress import push
+from backend.agent.llm import get_flash_llm
+from backend.agent.prompts.templates import EXTRACT_PROMPT
+from backend.agent.progress import push
 
-_llm_semaphore = asyncio.Semaphore(4)
+_llm_semaphore = asyncio.Semaphore(8)
 
 
 async def _extract_one_question(
@@ -26,12 +26,12 @@ async def _extract_one_question(
     content_parts = []
     for r in results:
         snippet = r.get("snippet", "") or r.get("content", "") or ""
-        if len(snippet) > 4000:
-            snippet = snippet[:2000] + "\n...\n" + snippet[-2000:]
+        if len(snippet) > 50000:
+            snippet = snippet[:25000] + "\n...\n" + snippet[-25000:]
         content_parts.append(f"来源: {r.get('title', '未知')}\n{snippet}")
 
     combined = "\n\n---\n\n".join(content_parts[:10])
-    prompt = EXTRACT_PROMPT.format(question=question, content=combined[:16000])
+    prompt = EXTRACT_PROMPT.format(question=question, content=combined[:80000])
 
     async with _llm_semaphore:
         response = await llm.ainvoke(prompt)

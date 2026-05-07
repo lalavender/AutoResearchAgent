@@ -1,8 +1,8 @@
 import json
-from agent.llm import get_pro_llm
-from agent.prompts.templates import REPORT_PROMPT
-from agent.progress import push
-from storage.file_store import save_report, save_state
+from backend.agent.llm import get_pro_llm
+from backend.agent.prompts.templates import REPORT_PROMPT
+from backend.agent.progress import push
+from backend.storage.file_store import save_report, save_state
 
 
 async def report_node(state: dict) -> dict:
@@ -22,7 +22,7 @@ async def report_node(state: dict) -> dict:
     prompt = REPORT_PROMPT.format(
         topic=topic,
         plan=json.dumps(plan, ensure_ascii=False),
-        findings=findings_text[:24000],
+        findings=findings_text[:200000],
     )
     response = await llm.ainvoke(prompt)
     report = response.content.strip()

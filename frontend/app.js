@@ -93,6 +93,12 @@ form.addEventListener('submit', async (e) => {
         renderPlan();
     });
 
+    es.addEventListener('search_update', (e) => {
+        const { completed_questions } = JSON.parse(e.data);
+        completedQuestions = completed_questions || [];
+        renderPlan();
+    });
+
     es.addEventListener('findings_update', (e) => {
         const { findings, completed_questions, total } = JSON.parse(e.data);
         allFindings = findings;
@@ -198,13 +204,13 @@ let lastLogEntry = null;
 function addLogEntry(phase, text, isNewEntry = true) {
     const icons = {
         planning: '📋', search: '🔍', extract: '💡', gap: '📊',
-        report: '📝', error: '❌', done: '✅',
+        report: '📝', error: '✕', done: '✓',
     };
     const now = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
     // 同一阶段的连续进度更新，原地替换最后一条
     if (!isNewEntry && lastLogPhase === phase && lastLogEntry) {
-        lastLogEntry.innerHTML = `<span class="entry-time">${now}</span><span class="entry-icon">${icons[phase] || '•'}</span>${text}`;
+        lastLogEntry.innerHTML = `<span class="entry-time">${now}</span><span class="entry-icon">${icons[phase] || '•'}</span><span class="entry-text">${text}</span>`;
         lastLogEntry.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         return;
     }
@@ -212,7 +218,7 @@ function addLogEntry(phase, text, isNewEntry = true) {
     lastLogPhase = phase;
     const entry = document.createElement('div');
     entry.className = `timeline-entry phase-${phase}`;
-    entry.innerHTML = `<span class="entry-time">${now}</span><span class="entry-icon">${icons[phase] || '•'}</span>${text}`;
+    entry.innerHTML = `<span class="entry-time">${now}</span><span class="entry-icon">${icons[phase] || '•'}</span><span class="entry-text">${text}</span>`;
     timeline.appendChild(entry);
     lastLogEntry = entry;
     timeline.scrollTop = timeline.scrollHeight;
@@ -231,17 +237,27 @@ function getPhaseLabel(node) {
 
 function renderPlan() {
     const el = document.getElementById('tab-plan');
+    if (!researchPlan.length) {
+        el.innerHTML = '<div class="empty-state">等待研究计划生成...</div>';
+        return;
+    }
     el.innerHTML = researchPlan.map(q => {
         const done = completedQuestions.includes(q);
         return `<div class="plan-item ${done ? 'done' : ''}">
-            <span class="status-icon">${done ? '✅' : '⬜'}</span>${q}
+            <span class="status-icon">${done ? '✓' : '○'}</span>
+            <span class="plan-text">${q}</span>
         </div>`;
     }).join('');
 }
 
 function renderFindings() {
     const el = document.getElementById('tab-findings');
-    el.innerHTML = Object.entries(allFindings).map(([q, findings]) => `
+    const entries = Object.entries(allFindings);
+    if (!entries.length) {
+        el.innerHTML = '<div class="empty-state">等待发现提取...</div>';
+        return;
+    }
+    el.innerHTML = entries.map(([q, findings]) => `
         <div class="finding-group">
             <h3>${q}</h3>
             <ul>${findings.map(f => `<li>${f}</li>`).join('')}</ul>
